@@ -1,0 +1,7 @@
+div:focus {
+    outline: none;
+}
+
+canvas {
+  position: absolute;
+}
