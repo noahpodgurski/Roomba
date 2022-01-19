@@ -1,5 +1,15 @@
 const FPS = 60;
 
+let vacuumStart = document.getElementById('vacuumStart');
+let vacuumSuck = document.getElementById('vacuumSuck');
+let vacuumStop = document.getElementById('vacuumStop');
+vacuumStart.volume = .3;
+vacuumSuck.volume = .3;
+vacuumStop.volume = .3;
+//vacuumSuck.loop = true;
+vacuumSuck.autoplay = true;
+vacuumSuck.preload = true;
+
 let canvas = document.querySelector('#canvas');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
@@ -18,7 +28,6 @@ function toRad(deg){
 
 function drawRoomba(){
     Roomba.ctx.drawImage(roomba, Roomba.x, Roomba.y, 100, 100);
-    // setCarControls();
 }
 
 function clearCanvas(){
@@ -29,13 +38,7 @@ function moveRoombaForward(){
     let rad = toRad(90)
     let x = Math.cos(rad);
     let y = Math.sin(rad);
-    // if (Roomba.direction > 0 && Roomba.direction < 180){
-    //     y *= -1;
-    // }
-    // if (Roomba.direction > 90 && Roomba.direction < 270){
-        //     x *= -1;
-        // }
-    
+
     Roomba.x += x*speed;
     Roomba.y -= y*speed;
 
@@ -54,29 +57,29 @@ function drawCircle() {
     Roomba.ctx.fill();
 }
 function turnRoombaRight(x, y, w, h, degrees){
-    // Roomba.ctx.save();
+    //moves the roomba with the rotation so that it stays centered
     Roomba.ctx.translate(x+w/2, y+h/2);
     Roomba.ctx.rotate(degrees*Math.PI/180.0);
     Roomba.direction -= degrees;
     Roomba.ctx.translate(-x-w/2, -y-h/2);
-    // Roomba.ctx.restore();
 }
 
 function turnRoombaLeft(x, y, w, h, degrees){
-    // Roomba.ctx.save();
+    //moves the roomba with the rotation so that it stays centered
     Roomba.ctx.translate(x+w/2, y+h/2);
     Roomba.ctx.rotate(-degrees*Math.PI/180.0);
     Roomba.direction += degrees;
     Roomba.ctx.translate(-x-w/2, -y-h/2);
-    // Roomba.ctx.restore();
 }
 
 var roomba = new Image();
 roomba.src = "./img/roomba.png";
+
 let visionNode = {
     x:0,
     y:0
 }
+
 let Roomba = {
     roomba: roomba,
     x: 600,
@@ -85,10 +88,10 @@ let Roomba = {
     borderY: 600,
     direction: 90,
     ctx: canvas.getContext('2d'),
-    state: "turning on",
+    state: "turning off",
     previousState: "forward",
     initTurn: 0,
-    on:true
+    on:false
 }
 
 function isOutside(padding=200){
@@ -100,16 +103,17 @@ function isOutside(padding=200){
 
 //RETURN FALSE IF NOTHING AHEAD, RETURN TRUE OF THERE IS
 function lookAhead(padding = 200){
+    //this uses the vision node to step ahead 5 pixels to see if there is anything ahead.
+    //once it hits something, it sees how close it is by pixel count.
     jump = 5;
     visionNode.x = Roomba.borderX;
     visionNode.y = Roomba.borderY;
     for (let i = 0; i < 1000; i+=5){
         visionNode.x += jump*Math.cos(toRad(Roomba.direction))
         visionNode.y -= jump*Math.sin(toRad(Roomba.direction))
-        //console.log(visionNode.x +" "+ visionNode.y);
         //HIT DETECTION FOR OTHER STUFF GOES HERE
         if (visionNode.x < 0 || visionNode.x > canvas.width-150 || visionNode.y < 0 || visionNode.y > canvas.height-150){
-            console.log(jump*i);
+            //jump*i is the distance from the roomba to where it collided with something
             if( jump*i >padding){
                 return false;
             }
@@ -131,26 +135,43 @@ function getMousePos(canvas, event){
     };
 }
 
+function loopAudio() {
+    console.log('restart')
+    // vacuumSuck.fastSeek(0);
+    vacuumSuck.currentTime = 0;
+    if (Roomba.on){
+        setTimeout(() => {
+        loopAudio();
+    }, 5000)
+}
+}
+
 canvas.addEventListener('click', function(evt) {
+    
     var mousePos = getMousePos(canvas, evt);
     if(mousePos.x < Roomba.borderX+60 && mousePos.x > Roomba.borderX+40 && mousePos.y < Roomba.borderY+60 && mousePos.y > Roomba.borderY+40){
-        if (Roomba.on){ 
+        if (Roomba.on){ //TURN OFF
             Roomba.on = false;
+            vacuumSuck.pause();
+            vacuumStop.play();
+        }
+        else{ //TURN ON
+            vacuumStart.play();
+            setTimeout(() => {
+                vacuumSuck.play();
+                loopAudio();
+            }, 2000)
+            Roomba.on = true;
             Roomba.state = "turning on";
         }
-        else{
-            Roomba.on = true;
-        }
-        alert("hit");
     }
 }, false);
 
 function go(turning=0){ 
     clearCanvas();
     drawCircle();
-    drawRoomba();   
+    drawRoomba();  
 
-    // let n = Math.random() * 100;
     if (Roomba.on){
         if (speed < initSpeed) {
             speed += 0.1;
@@ -161,7 +182,7 @@ function go(turning=0){
             speed -= 0.1;
         }
         else{
-            speed = 0;
+            Roomba.state = "off"
         }
     }
 
@@ -182,22 +203,18 @@ function go(turning=0){
                 break;
             }
             case "turning off":{
-
+                
+                break;
             }
             case "turning on":{
                 Roomba.state = "forward";
+                break;
+            }
+            case "off": {
+                break;
             }
         }
     
-
-    // console.log(Roomba.borderX, Roomba.borderY)
-    // console.log("Dir: " + Roomba.direction);
-    // console.log(turning);
-    // if (turning <= 0 && isOutside()){
-    //     turnRoombaLeft(Roomba.x, Roomba.y, 100, 100, (Math.random()*90)+60)
-    //     go(50)
-    //     return;
-    // }
     setTimeout(() => {
         go(turning-=1);
     }, 1000/FPS) // 60 FPS FRESH
