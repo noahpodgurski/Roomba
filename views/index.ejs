@@ -1,4 +1,11 @@
 <html>
+    <style>
+        #basketball {
+          position: absolute;
+          z-index: 1;
+        }
+        
+        </style>
     <head>
         <link rel="stylesheet" type="text/css" href="./css/index.css" /> 
     </head>
@@ -7,12 +14,18 @@
         <audio id="vacuumSuck" src='./audio/vacuumSuck.wav'></audio>
         <audio id="vacuumStop" src='./audio/vacuumStop.wav'></audio>
         <div tabindex="1">
+            <div id = "basketBall">
+                <img id="source"
+                src="./img/basketball.png"
+                width="150" height="147">
+            </div>
             <canvas id="canvas"></canvas>
             <div style="display:none;">
                 <img id="source"
                 src="./img/roomba.png"
                 width="300" height="227">
             </div>
+
         </div>
         <script src="./js/index.js"></script>
     </body>

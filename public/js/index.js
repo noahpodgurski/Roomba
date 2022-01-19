@@ -22,6 +22,49 @@ var initSpeed = 5;
 var speed = 0;
 var angle = 25;
 
+let basketBall = document.getElementById('basketBall');
+
+function dragElement(elmnt) {
+  var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+  //if (document.getElementById(elmnt.id + "header")) {
+    /* if present, the header is where you move the DIV from:*/
+    //document.getElementById(elmnt.id + "header").onmousedown = dragMouseDown;
+  //} else {
+    /* otherwise, move the DIV from anywhere inside the DIV:*/
+    elmnt.onmousedown = dragMouseDown;
+  //}
+
+  function dragMouseDown(e) {
+    e = e || window.event;
+    e.preventDefault();
+    // get the mouse cursor position at startup:
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    document.onmouseup = closeDragElement;
+    // call a function whenever the cursor moves:
+    document.onmousemove = elementDrag;
+  }
+
+  function elementDrag(e) {
+    e = e || window.event;
+    e.preventDefault();
+    // calculate the new cursor position:
+    pos1 = pos3 - e.clientX;
+    pos2 = pos4 - e.clientY;
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    // set the element's new position:
+    elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+    elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+  }
+
+  function closeDragElement() {
+    /* stop moving when mouse button is released:*/
+    document.onmouseup = null;
+    document.onmousemove = null;
+  }
+}
+
 function toRad(deg){
     return deg * Math.PI / 180
 }
@@ -105,6 +148,9 @@ function isOutside(padding=200){
 function lookAhead(padding = 200){
     //this uses the vision node to step ahead 5 pixels to see if there is anything ahead.
     //once it hits something, it sees how close it is by pixel count.
+    basketBall.x = basketBall.getBoundingClientRect().x;
+    basketBall.y = basketBall.getBoundingClientRect().y;
+    console.log(basketBall.getBoundingClientRect());
     jump = 5;
     visionNode.x = Roomba.borderX;
     visionNode.y = Roomba.borderY;
@@ -112,6 +158,16 @@ function lookAhead(padding = 200){
         visionNode.x += jump*Math.cos(toRad(Roomba.direction))
         visionNode.y -= jump*Math.sin(toRad(Roomba.direction))
         //HIT DETECTION FOR OTHER STUFF GOES HERE
+        if (visionNode.x > basketBall.x-50 && visionNode.x < basketBall.x+100 && visionNode.y > basketBall.y-50 && visionNode.y < basketBall.y+100){
+            //jump*i is the distance from the roomba to where it collided with something
+            console.log(jump*i)
+            if( jump*i >padding){
+                return false;
+            }
+            else{
+                return true;
+            }
+        }
         if (visionNode.x < 0 || visionNode.x > canvas.width-150 || visionNode.y < 0 || visionNode.y > canvas.height-150){
             //jump*i is the distance from the roomba to where it collided with something
             if( jump*i >padding){
@@ -146,6 +202,7 @@ function loopAudio() {
 }
 }
 
+//Roomba on off function
 canvas.addEventListener('click', function(evt) {
     
     var mousePos = getMousePos(canvas, evt);
@@ -167,7 +224,11 @@ canvas.addEventListener('click', function(evt) {
     }
 }, false);
 
+//main loop
 function go(turning=0){ 
+    //dragElement(document.getElementById("mydiv"));
+    dragElement(basketBall);
+
     clearCanvas();
     drawCircle();
     drawRoomba();  
