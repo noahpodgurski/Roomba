@@ -5,3 +5,13 @@ div:focus {
 canvas {
   position: absolute;
 }
+
+#basketball {
+  position: absolute;
+  z-index: 1;
+}
+body {
+  /* background-color: red;  */
+  background-image: url('./img/carpet.jpg'); 
+  /* background-size: 30em; */
+}

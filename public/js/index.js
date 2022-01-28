@@ -125,10 +125,10 @@ let visionNode = {
 
 let Roomba = {
     roomba: roomba,
-    x: 600,
-    y: 600,
-    borderX: 600,
-    borderY: 600,
+    x: canvasHeight/1,
+    y: canvasWidth/3,
+    borderX: canvasHeight/1,
+    borderY: canvasWidth/3,
     direction: 90,
     ctx: canvas.getContext('2d'),
     state: "turning off",
@@ -137,20 +137,12 @@ let Roomba = {
     on:false
 }
 
-function isOutside(padding=200){
-    // console.log(Roomba.y-padding)
-    // console.log(Roomba.borderX-padding < 0, Roomba.borderX+padding > canvas.width, Roomba.borderY-padding < 0, Roomba.borderY+padding > canvas.height)
-    // return Roomba.borderX-padding < 0 || Roomba.borderX+padding > canvas.width || Roomba.borderY+padding > canvas.height
-    return Roomba.borderX-padding < 0 || Roomba.borderX+padding > canvas.width || Roomba.borderY-padding < 0 || Roomba.borderY+padding > canvas.height
-}
-
 //RETURN FALSE IF NOTHING AHEAD, RETURN TRUE OF THERE IS
 function lookAhead(padding = 200){
     //this uses the vision node to step ahead 5 pixels to see if there is anything ahead.
     //once it hits something, it sees how close it is by pixel count.
     basketBall.x = basketBall.getBoundingClientRect().x;
     basketBall.y = basketBall.getBoundingClientRect().y;
-    console.log(basketBall.getBoundingClientRect());
     jump = 5;
     visionNode.x = Roomba.borderX;
     visionNode.y = Roomba.borderY;
