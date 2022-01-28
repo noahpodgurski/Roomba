@@ -3,23 +3,25 @@
     <head>
         <link rel="stylesheet" type="text/css" href="./css/index.css" /> 
     </head>
-    <body style="background-image: url('./img/carpet.jpg'); background-size: 30em;">
+    <!-- style="background-image: url('./img/carpet.jpg'); background-size: 30em;" -->
+    <body>
         <audio id="vacuumStart" src='./audio/vacuumStart.wav'></audio>
         <audio id="vacuumSuck" src='./audio/vacuumSuck.wav'></audio>
         <audio id="vacuumStop" src='./audio/vacuumStop.wav'></audio>
-        <div tabindex="1">
-            <div id = "basketBall">
-                <img id="source"
-                src="./img/basketball.png"
-                width="150" height="147">
+        <div id = "basketBall" tabindex="2">
+            <img id="source"
+            src="./img/basketball.png"
+            width="150" height="147">
+        </div>
+        <div style="display:none;">
+            <img id="source"
+            src="./img/roomba.png"
+            width="300" height="227">
+        </div>
+        <div id = "dustMask">
+            <div id = "carpet" tabindex="1">
+                <canvas id="canvas" width="1920" height="1080"></canvas>
             </div>
-            <canvas id="canvas" width="1920" height="1080"></canvas>
-            <div style="display:none;">
-                <img id="source"
-                src="./img/roomba.png"
-                width="300" height="227">
-            </div>
-
         </div>
         <script src="./js/index.js"></script>
     </body>

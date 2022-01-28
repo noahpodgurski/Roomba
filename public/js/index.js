@@ -11,6 +11,7 @@ vacuumSuck.autoplay = true;
 vacuumSuck.preload = true;
 
 let canvas = document.querySelector('#canvas');
+
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
@@ -22,17 +23,20 @@ var initSpeed = 5;
 var speed = 0;
 var angle = 25;
 
+/*TO DO 
+SUCK UP DUST 
+    Get the dustMask
+    get the Roomba's location
+    turn the spot which the roomba is located is transparent
+    save the dustMask
+*/
+
+
 let basketBall = document.getElementById('basketBall');
 
 function dragElement(elmnt) {
   var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-  //if (document.getElementById(elmnt.id + "header")) {
-    /* if present, the header is where you move the DIV from:*/
-    //document.getElementById(elmnt.id + "header").onmousedown = dragMouseDown;
-  //} else {
-    /* otherwise, move the DIV from anywhere inside the DIV:*/
-    elmnt.onmousedown = dragMouseDown;
-  //}
+  elmnt.onmousedown = dragMouseDown;
 
   function dragMouseDown(e) {
     e = e || window.event;

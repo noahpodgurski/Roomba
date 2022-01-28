@@ -1,7 +1,28 @@
-div:focus {
+ div:focus {
     outline: none;
+} 
+body {
+  background-image: url('../img/dust.jpg');
 }
+#carpet {
+  width: 100vw;
+  height: 100vh;
+  /* padding: 1rem; */
+   /* background-color: red;  */
+  background-image: url('../img/carpet.jpg'); 
+  background-size:35ex;
+  /* background-position: center;  */
+  /* background-repeat:no-repeat; */
 
+  /* mask-image:url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/3/chris-mask.png);  */
+  /* mask-image: url('../img/DustMask.png'); */
+  /* mask-size: cover; */
+  /* mask-position: center; */
+  /* mask-repeat: no-repeat;   */
+}
+#dustMask {
+  mask-image: url('../img/dustMask.png');
+}
 canvas {
   position: absolute;
 }
@@ -9,9 +30,4 @@ canvas {
 #basketball {
   position: absolute;
   z-index: 1;
-}
-body {
-  /* background-color: red;  */
-  background-image: url('./img/carpet.jpg'); 
-  /* background-size: 30em; */
 }
